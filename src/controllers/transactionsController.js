@@ -156,3 +156,46 @@ export const getRecent = async (req, res) => {
   }
 };
 
+export const getTotalIncome = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: 'Usuário não autenticado' });
+        }
+
+        const totalIncome = await prisma.transaction.aggregate({
+            _sum: { amount: true },
+            where: {
+                userId,
+                type: 'income'
+            }
+        });
+
+        res.json({ totalIncome: totalIncome._sum.amount || 0 });
+    } catch (error) {
+        return res.status(500).json({ error: 'Erro ao calcular total de transações de entrada' });
+    }
+}
+
+export const getTotalExpense = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        if (!userId) {
+            return res,status(500).json({ error: 'Usuário não autenticado' })
+        }
+
+        const totalExpense = await prisma.transaction.aggregate({
+            _sum: { amount: true },
+            where: {
+                userId,
+                type: 'expense'
+            }
+        })
+
+        res.json({ totalExpense: totalExpense._sum.amount || 0 });
+    } catch (error) {
+        return res.status(500).json({ error: 'Erro ao calcular total de transações de saída' });
+    }
+}
