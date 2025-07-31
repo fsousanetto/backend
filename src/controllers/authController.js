@@ -131,7 +131,7 @@ const httpsRequest = (url) => {
                         data: jsonData
                     });
                 } catch (error) {
-                    reject(new Error('Erro ao processar resposta JSON: ' + data));
+                    reject(new Error(`Erro ao processar resposta JSON: ${data}`));
                 }
             });
         });
